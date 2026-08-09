@@ -27,67 +27,67 @@ const CONFIG = {
    lip: which plate of Figure 4.3 applies (1 spread ... 5 tightly rounded)
    ========================================================================== */
 const V = {
-  iy:{ipa:'iy', ipaAlt:'iː', name:'high front tense', fx:.05, fy:.07, jaw:.06, lip:1, tense:1,
+  iy:{ipa:'iy', ipaAlt:'iː', name:'high front tense', fx:.13, fy:.08, jaw:.06, lip:1, tense:1,
       words:['heat','be','free','deed','beam','bee','me','tree'],
       how:'Tongue high and pushed forward, jaw almost closed, lips spread into a wide smile. The /y/ glide is easiest to hear in open syllables — bee, me, tree.',
       glide:[.02,-.03],
       spellings:[{p:'ee',e:'see, feet, green'},{p:'ea',e:'eat, meat, please'},{p:'e / e_e',e:'be, these, complete'},{p:'ie / ei',e:'field, receive'},{p:'-y (stressed)',e:'key, city'}]},
-  I :{ipa:'ɪ', ipaAlt:'ɪ', name:'high front lax', fx:.20, fy:.17, jaw:.18, lip:2, tense:0,
+  I :{ipa:'ɪ', ipaAlt:'ɪ', name:'high front lax', fx:.28, fy:.26, jaw:.18, lip:2, tense:0,
       words:['fit','tin','pin','sit','bit','ship','live','rich'],
       how:'Relax the muscles from /iy/: the jaw drops a little, the lips spread less, the tongue moves toward the centre. No glide at all.',
       spellings:[{p:'i',e:'sit, thin, milk'},{p:'y',e:'gym, myth, system'},{p:'ui / e',e:'build, pretty'},{p:'-age / -ate (reduced)',e:'village, climate'}]},
-  ey:{ipa:'ey', ipaAlt:'eɪ', name:'mid front tense', fx:.11, fy:.45, jaw:.34, lip:2, tense:1,
+  ey:{ipa:'ey', ipaAlt:'eɪ', name:'mid front tense', fx:.07, fy:.42, jaw:.34, lip:2, tense:1,
       words:['rain','may','great','trade','ray','pain','late','name'],
       how:'Start lower and less spread than /iy/, then let the tongue ride up toward the /y/ glide. Two symbols because it is two movements.',
       glide:[-.07,-.42],
       spellings:[{p:'a_e',e:'name, late, made'},{p:'ai / ay',e:'rain, day, plain'},{p:'ei / eigh',e:'vein, eight, weigh'},{p:'ea',e:'great, break, steak'}]},
-  E :{ipa:'ɛ', ipaAlt:'e', name:'mid front lax', fx:.27, fy:.58, jaw:.50, lip:2, tense:0,
+  E :{ipa:'ɛ', ipaAlt:'e', name:'mid front lax', fx:.21, fy:.50, jaw:.50, lip:2, tense:0,
       words:['get','hen','bet','bed','red','said','men','dress'],
       how:'Jaw fairly still in mid position, lips only slightly spread, tongue more central than /ey/. No glide.',
       spellings:[{p:'e',e:'bed, red, tell'},{p:'ea',e:'bread, head, weather'},{p:'ai / ay',e:'said, says'},{p:'ie / a',e:'friend, many'}]},
-  ae:{ipa:'æ', ipaAlt:'æ', name:'low front lax', fx:.21, fy:.92, jaw:.80, lip:3, tense:0,
+  ae:{ipa:'æ', ipaAlt:'æ', name:'low front lax', fx:.08, fy:.91, jaw:.80, lip:3, tense:0,
       words:['cat','pan','hat','bad','man','back','laugh','ask'],
       how:'From /ɛ/, drop the tongue and jaw further and spread the lips more. Speakers who learned British English often replace it with /ɑ/ in class, fast, chance, passed.',
       spellings:[{p:'a',e:'cat, hand, plan'},{p:'au',e:'laugh, aunt'},{p:'ai',e:'plaid'}]},
-  a :{ipa:'ɑ', ipaAlt:'ɑː', name:'low central tense', fx:.79, fy:.95, jaw:1.0, lip:3, tense:1,
+  a :{ipa:'ɑ', ipaAlt:'ɑː', name:'low central tense', fx:.50, fy:.95, jaw:1.0, lip:3, tense:1,
       words:['ma','hot','clock','spa','pot','father','stop','job'],
       how:'The sound a doctor asks for — "aahh". Jaw at its most open, tongue lying flat and low, lips neither rounded nor spread.',
       spellings:[{p:'o',e:'hot, stop, box'},{p:'a',e:'father, calm, spa'},{p:'ea / augh',e:'heart, ah'}]},
-  V_:{ipa:'ʌ', ipaAlt:'ʌ', name:'low mid-central lax', fx:.55, fy:.66, jaw:.52, lip:2, tense:0,
+  V_:{ipa:'ʌ', ipaAlt:'ʌ', name:'low mid-central lax', fx:.48, fy:.64, jaw:.52, lip:2, tense:0,
       words:['cut','son','fun','but','luck','done','love','up'],
       how:'Jaw, lips and tongue all relaxed and central. Higher and slightly further forward than /ɑ/; lower and further back than /ɛ/.',
       spellings:[{p:'u',e:'cut, sun, must'},{p:'o',e:'son, love, done'},{p:'ou',e:'country, young, touch'},{p:'oo',e:'blood, flood'}]},
-  O :{ipa:'ɔ', ipaAlt:'ɔː', name:'low back tense', fx:.94, fy:.86, jaw:.70, lip:4, tense:1,
+  O :{ipa:'ɔ', ipaAlt:'ɔː', name:'low back tense', fx:.82, fy:.85, jaw:.70, lip:4, tense:1,
       words:['thought','law','caught','dawn','tall','bought','saw','fall'],
       how:'From /ɑ/, the jaw rises, the tongue moves back and the lips round. Many speakers in the US and Canada do not separate this from /ɑ/ at all.',
       spellings:[{p:'aw / au',e:'law, caught, autumn'},{p:'ough / augh',e:'bought, taught'},{p:'al',e:'tall, walk, salt'},{p:'o',e:'dog, long, off'}]},
-  ow:{ipa:'ow', ipaAlt:'oʊ', name:'mid back tense', fx:.86, fy:.52, jaw:.40, lip:5, tense:1,
+  ow:{ipa:'ow', ipaAlt:'oʊ', name:'mid back tense', fx:.92, fy:.55, jaw:.40, lip:5, tense:1,
       words:['sew','boat','toe','go','home','know','coat','slow'],
       how:'Begins in mid position and glides up toward /w/. The lips close like a camera shutter: fully rounded and open, then tightly rounded.',
       glide:[.11,-.42],
       spellings:[{p:'o / o_e',e:'go, home, note'},{p:'oa',e:'boat, coat, road'},{p:'ow',e:'know, slow, show'},{p:'ough',e:'though, dough'}]},
-  U :{ipa:'ʊ', ipaAlt:'ʊ', name:'high back lax', fx:.73, fy:.20, jaw:.18, lip:4, tense:0,
+  U :{ipa:'ʊ', ipaAlt:'ʊ', name:'high back lax', fx:.78, fy:.26, jaw:.18, lip:4, tense:0,
       words:['look','wool','book','could','put','good','took','foot'],
       how:'Start from the tense rounded position of /uw/, then loosen the muscles and relax the rounding. Lower, more centred, less rounded. No glide.',
       spellings:[{p:'oo',e:'book, good, foot'},{p:'u',e:'put, full, push'},{p:'ou',e:'could, would, should'},{p:'o',e:'wolf, woman'}]},
-  uw:{ipa:'uw', ipaAlt:'uː', name:'high back tense', fx:.95, fy:.07, jaw:.06, lip:5, tense:1,
+  uw:{ipa:'uw', ipaAlt:'uː', name:'high back tense', fx:.93, fy:.09, jaw:.06, lip:5, tense:1,
       words:['blue','room','boot','zoo','Luke','food','true','moon'],
       how:'Back of the tongue very high, lips tightly rounded — the position for a kiss. The /w/ glide is clearest in open syllables such as zoo.',
       glide:[.01,-.03],
       spellings:[{p:'oo',e:'food, moon, soon'},{p:'u_e / ue',e:'rule, blue, true'},{p:'ou',e:'soup, group, you'},{p:'ew / o',e:'new, do, who'}]},
-  er:{ipa:'ɝ', ipaAlt:'ɜr', name:'r-coloured mid-central', fx:.50, fy:.45, jaw:.40, lip:4, tense:1,
+  er:{ipa:'ɝ', ipaAlt:'ɜr', name:'r-coloured mid-central', fx:.47, fy:.44, jaw:.40, lip:4, tense:1,
       words:['bird','hurt','word','learn','girl','nurse','first','turn'],
       how:'When /ʌ/ is followed by /r/ the quality changes so much that it needs its own symbol. The tongue bunches and takes on the retroflex colour of /r/ all the way through the vowel.',
       spellings:[{p:'ir',e:'bird, first, girl'},{p:'ur',e:'hurt, turn, nurse'},{p:'er',e:'her, term, serve'},{p:'ear / or',e:'learn, word, work'}]},
-  ay:{ipa:'ay', ipaAlt:'aɪ', name:'diphthong: low central → high front', fx:.55, fy:1.0, jaw:.95, lip:3, tense:1, diph:1, to:[.09,.05],
+  ay:{ipa:'ay', ipaAlt:'aɪ', name:'diphthong: low central → high front', fx:.45, fy:.98, jaw:.95, lip:3, tense:1, diph:1, to:[.13,.08],
       words:['pie','fine','my','height','bite','time','ice','write'],
       how:'Open wide for /ɑ/, then let the jaw and tongue rise and the lips spread as you move toward /iy/. One long gliding movement, not two vowels.',
       spellings:[{p:'i_e',e:'time, nice, write'},{p:'y / ye',e:'my, try, dye'},{p:'igh',e:'high, night, light'},{p:'ei / ie',e:'height, tie, pie'}]},
-  aw:{ipa:'aw', ipaAlt:'aʊ', name:'diphthong: low central → high back', fx:.55, fy:1.0, jaw:.95, lip:3, tense:1, diph:1, to:[.95,.05],
+  aw:{ipa:'aw', ipaAlt:'aʊ', name:'diphthong: low central → high back', fx:.45, fy:.98, jaw:.95, lip:3, tense:1, diph:1, to:[.93,.09],
       words:['blouse','how','bout','town','loud','now','house','out'],
       how:'Start from the same open position as /ay/, but this time the lips round as the tongue rises toward /uw/.',
       spellings:[{p:'ou',e:'out, loud, house'},{p:'ow',e:'how, town, brown'}]},
-  oy:{ipa:'ɔy', ipaAlt:'ɔɪ', name:'diphthong: low back → high front', fx:.97, fy:.88, jaw:.70, lip:4, tense:1, diph:1, to:[.09,.05],
+  oy:{ipa:'ɔy', ipaAlt:'ɔɪ', name:'diphthong: low back → high front', fx:.82, fy:.85, jaw:.70, lip:4, tense:1, diph:1, to:[.13,.08],
       words:['boy','choice','coin','oil','joy','noise','point','toy'],
       how:'Begin at the lowest back vowel /ɔ/ with rounded lips, then glide forward and up toward /iy/, spreading the lips as you go.',
       spellings:[{p:'oi',e:'oil, coin, noise'},{p:'oy',e:'boy, toy, enjoy'}]},
@@ -207,7 +207,13 @@ const UNITS = [
    3. THE FIGURE — a recreation of Figure 4.1
    ========================================================================== */
 const FIG = (() => {
-  const G = { tl:[252,152], tr:[664,152], br:[664,452], bl:[392,452] };
+  /* Corners and dividers traced from Figure 4.1. The left edge and the
+     front|central divider slant at different angles — the front column
+     narrows sharply toward the bottom because the tongue cannot reach as
+     far forward when it is low. */
+  const G = { tl:[252,152], tr:[664,152], br:[664,452], bl:[444,452] };
+  const DIV_FC = [[414,152],[502,452]];   // front | central  (slanted)
+  const DIV_CB = 567;                     // central | back   (vertical)
   function gp(fx,fy){
     const tx=G.tl[0]+(G.tr[0]-G.tl[0])*fx, ty=G.tl[1]+(G.tr[1]-G.tl[1])*fx;
     const bx=G.bl[0]+(G.br[0]-G.bl[0])*fx, by=G.bl[1]+(G.br[1]-G.bl[1])*fx;
@@ -287,8 +293,10 @@ const FIG = (() => {
 
 <path d="M ${G.tl} L ${G.tr} L ${G.br} L ${G.bl} Z" fill="none" stroke="#8A7364" stroke-width="1.8"/>
 <g fill="none" stroke="#8A7364" stroke-width="1.1" opacity=".6">
-  <path d="M ${gp(.34,0)} L ${gp(.34,1)}"/><path d="M ${gp(.67,0)} L ${gp(.67,1)}"/>
-  <path d="M ${gp(0,.34)} L ${gp(1,.34)}"/><path d="M ${gp(0,.67)} L ${gp(1,.67)}"/>
+  <path d="M ${DIV_FC[0]} L ${DIV_FC[1]}"/>
+  <path d="M ${DIV_CB} 152 L ${DIV_CB} 452"/>
+  <path d="M ${gp(0,1/3)} L 664 252"/>
+  <path d="M ${gp(0,2/3)} L 664 352"/>
 </g>
 
 ${ghosts}
@@ -296,10 +304,10 @@ ${ghosts}
 ${arrow}${pts}
 
 <g font-family="Karla,sans-serif" font-size="17" letter-spacing="1">
-  ${lab(300,132,'front')}${lab(452,132,'central')}${lab(598,132,'back')}
-  ${lab(gp(0,.17)[0]-14, gp(0,.17)[1]+6, 'high','end')}
-  ${lab(gp(0,.50)[0]-14, gp(0,.50)[1]+6, 'mid','end')}
-  ${lab(gp(0,.84)[0]-14, gp(0,.84)[1]+6, 'low','end')}
+  ${lab(333,132,'front','middle')}${lab(490,132,'central','middle')}${lab(615,132,'back','middle')}
+  ${lab(gp(0,.17)[0]-20, gp(0,.17)[1]+6, 'high','end')}
+  ${lab(gp(0,.50)[0]-20, gp(0,.50)[1]+6, 'mid','end')}
+  ${lab(gp(0,.84)[0]-20, gp(0,.84)[1]+6, 'low','end')}
 </g>
 <g stroke="#9C8A7E" stroke-width="1.6" fill="none">
   <path d="M 762 168 L 762 436"/><path d="M 756 176 L 762 164 L 768 176"/><path d="M 756 428 L 762 440 L 768 428"/>
@@ -616,7 +624,7 @@ function buildQuestions(u, actId, n){
     for(let i=0;i<n;i++){
       const useA = i%2===0;
       const w = (useA?wordsA:wordsB)[Math.floor(i/2)%(useA?wordsA:wordsB).length];
-      Q.push({ say:null, prompt:`Which vowel does <em>${esc(w)}</em> have?`,
+      Q.push({ say:w, prompt:`Which vowel does <em>${esc(w)}</em> have?`,
                opts:[`/${A.ipa}/`,`/${B.ipa}/`].sort(()=>Math.random()-.5),
                ans:`/${(useA?A:B).ipa}/`,
                why:`"${w}" is pronounced with /${(useA?A:B).ipa}/.` });
@@ -644,7 +652,7 @@ function runQuiz({title, sub, questions, onDone, backTo}){
           <button class="play big" id="rep" aria-label="Play again">${playIcon()}</button>
           <button class="mini ghost" id="slow">Slower</button>
           <span class="wave" id="wave"><i></i><i></i><i></i><i></i><i></i></span>
-        </div><p class="qhint">Play as many times as you need.</p>`:'<p class="qhint">No audio for this one — go by the spelling.</p>'}
+        </div><p class="qhint">Play as many times as you need.</p>`:'<p class="qhint">Read it, then decide.</p>'}
         <div class="opts" id="opts">
           ${q.opts.map(o=>`<button class="opt" data-o="${esc(o)}">${o}</button>`).join('')}
         </div>
