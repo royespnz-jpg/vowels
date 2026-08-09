@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Listening, speaking and pronunciation practice for the English vowel system — study the quadrant, identify the vowels you hear, then record yourself.">
+<meta name="color-scheme" content="dark">
+<title>The Vowel Lab · Listening &amp; Speaking Practice</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23100D0B'/%3E%3Cpath d='M7 9 L25 9 L21 23 L11 23 Z' fill='none' stroke='%23E4572E' stroke-width='2.2'/%3E%3Ccircle cx='10' cy='11' r='1.8' fill='%2321B0A0'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Karla:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="topbar">
+  <button class="brand" id="brand" data-go="home" aria-label="The Vowel Lab — go to the study plan">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 34 26" width="26" height="20">
+        <path d="M4 3 H30 L24 23 H12 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="7.5" cy="5.5" r="2" fill="#E4572E"/>
+        <circle cx="27" cy="5.5" r="2" fill="#E4572E"/>
+        <circle cx="15" cy="20" r="2" fill="#21B0A0"/>
+      </svg>
+    </span>
+    <span class="brand-txt">The Vowel <em>Lab</em></span>
+  </button>
+  <nav class="topnav">
+    <button class="mini ghost" data-go="lab">Sound Lab</button>
+    <button class="mini ghost" id="settings-toggle" aria-expanded="false" aria-controls="settings">Settings</button>
+  </nav>
+</header>
+
+<div class="settings" id="settings" hidden>
+  <div class="settings-in">
+    <div class="field">
+      <label for="student">Your name</label>
+      <input type="text" id="student" placeholder="First and last name" autocomplete="name">
+      <p class="help">Used when you send scores or recordings to your teacher.</p>
+    </div>
+    <div class="field">
+      <label for="section">Group / section</label>
+      <input type="text" id="section" placeholder="e.g. 10-1">
+    </div>
+    <div class="field">
+      <label for="voice">Voice</label>
+      <select id="voice"></select>
+      <p class="help">Choose the clearest English voice your device offers.</p>
+    </div>
+    <div class="field">
+      <label for="rate">Speaking rate <span class="val" id="rate-val">0.90</span></label>
+      <input type="range" id="rate" min="0.6" max="1.1" step="0.05" value="0.9">
+    </div>
+  </div>
+</div>
+
+<main id="main" class="view" aria-live="polite"></main>
+
+<footer class="foot">
+  <p class="foot-sign" data-text="Designed by Rosney Hernández">Designed by Rosney Hernández</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="script.js"></script>
+</body>
+</html>
