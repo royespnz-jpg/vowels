@@ -38,9 +38,29 @@ what the jaw and lips do, tense or lax, and the common spellings.
 | 9 | the diphthongs /ay aw ɔy/ | — |
 | 10 | /r/-colouring and reduced vowels | — |
 
-**Five activities per unit**, ten questions each, 80% to clear one — Minimal
-Pairs, Same or Different, Odd One Out, In Context, Spelling to Sound. Questions
-reshuffle on every attempt, so a retry is never the same test.
+**Five activities per unit**, ten questions each — Minimal Pairs, Same or
+Different, Odd One Out, In Context, Spelling to Sound. All five play audio.
+Questions reshuffle on every attempt, so a retry is never the same test.
+
+**Units unlock one at a time.** An activity is cleared at **90%** — 9 correct
+out of 10. Clear all five in a unit and the next unit opens; until then it shows
+as locked and cannot be entered. Unit 1 is open from the start, and the final
+exam opens once all ten units are cleared.
+
+Progress is saved in the student's browser, so a reload does not send them back
+to Unit 1. **Settings → Reset my progress** clears it and re-locks everything —
+useful on a shared lab machine between classes.
+
+Three values at the top of `script.js` control all of this:
+
+```js
+passMark: 0.9,     // 9 out of 10 to clear an activity
+lockUnits: true,   // false opens all ten units at once
+examAfter: 10,     // units cleared before the exam opens
+```
+
+If you change `passMark`, change `PASS_MARK` in `Code.gs` to match — that is
+what fills the *Passed* column in the spreadsheet.
 
 **Speaking Studio** — plays a model, records the student, puts the two side by
 side.
@@ -60,7 +80,11 @@ vowels.
 Three of the book's figures are folded into one live drawing:
 
 - **Figure 4.1** gives the layout: the quadrant sitting inside the oral cavity,
-  front / central / back across, high / mid / low down.
+  front / central / back across, high / mid / low down. The grid geometry and
+  every vowel's position were measured off the printed figure at 400 dpi, so
+  the left edge and the front|central divider slant at their true — and
+  different — angles, the central|back divider is vertical, and each vowel
+  lands in the cell the book puts it in (/ɑ/ low **central**, not back).
 - **Figure 4.2** gives the tongue contours. The solid vermilion line is the
   selected vowel; the dashed lines behind it are all the others, so the whole
   system stays visible at once.
