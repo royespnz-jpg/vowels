@@ -18,7 +18,16 @@ const CONFIG = {
      Empty this string and the Send buttons simply stay hidden. */
   endpoint: 'https://script.google.com/macros/s/AKfycbxTvKebIEZzsTcK1psHRYfrse4_wPiwE4p--s-NtlGWzQD22oMC4qFxvNbbJseCc8aS/exec',
   maxClipSeconds: 20,
-  passMark: 0.8,
+
+  /* Score needed to clear one activity. 0.9 = 9 correct out of 10. */
+  passMark: 0.9,
+
+  /* Units open one at a time: unit 2 stays locked until every activity in
+     unit 1 is cleared, and so on. Set to false to open all ten at once. */
+  lockUnits: true,
+
+  /* How many units must be cleared before the final exam opens. */
+  examAfter: 10,
 };
 
 /* ============================================================================
@@ -395,7 +404,29 @@ const Rec = {
 /* ============================================================================
    6. STATE
    ========================================================================== */
+/* Progress has to survive a reload, or a student who refreshes is locked back
+   out of every unit. localStorage is feature-detected: where it is blocked
+   (private windows, sandboxed frames) the app still runs, it just forgets
+   between sessions. */
+const Store = (()=>{
+  const KEY='vowel-lab-progress-v1';
+  let ok=false;
+  try{ localStorage.setItem(KEY+'-t','1'); localStorage.removeItem(KEY+'-t'); ok=true; }catch(e){ ok=false; }
+  return {
+    ok,
+    load(){ if(!ok) return null; try{ return JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ return null; } },
+    save(v){ if(!ok) return; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} },
+    wipe(){ if(!ok) return; try{ localStorage.removeItem(KEY); }catch(e){} }
+  };
+})();
+
 const State = { done:{}, scores:{}, clips:{} };
+(function restore(){
+  const saved = Store.load();
+  if(saved){ State.done = saved.done || {}; State.scores = saved.scores || {}; }
+})();
+/* clips hold Blobs, which do not serialise — recordings stay session-only */
+function saveProgress(){ Store.save({ done:State.done, scores:State.scores }); }
 const $ = s => document.querySelector(s);
 const main = () => document.getElementById('main');
 let autoPlayTimer = null;
@@ -411,6 +442,16 @@ function pick(a,n){ return shuffle(a).slice(0,n); }
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function playIcon(){ return '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; }
 function unitDoneCount(u){ return ACTS.filter(a=>State.done[u.id+':'+a.id]).length; }
+function unitCleared(u){ return unitDoneCount(u) === ACTS.length; }
+function unitIndex(id){ return UNITS.findIndex(u=>u.id===id); }
+function clearedCount(){ return UNITS.filter(unitCleared).length; }
+/* a unit opens when the one before it is fully cleared */
+function unitUnlocked(i){
+  if(!CONFIG.lockUnits || i<=0) return true;
+  return unitCleared(UNITS[i-1]);
+}
+function examUnlocked(){ return clearedCount() >= CONFIG.examAfter; }
+function lockIcon(){ return '<svg viewBox="0 0 24 24" width="13" height="13" style="vertical-align:-1px"><path fill="currentColor" d="M17 9V7a5 5 0 0 0-10 0v2H5v13h14V9h-2zM9 7a3 3 0 0 1 6 0v2H9V7zm4 9.7V19h-2v-2.3a2 2 0 1 1 2 0z"/></svg>'; }
 
 function setView(html){
   clearTimeout(autoPlayTimer); autoPlayTimer=null;
@@ -423,14 +464,32 @@ function setView(html){
    7. VIEWS
    ========================================================================== */
 function viewHome(){
+  const pc = Math.round(CONFIG.passMark*100);
   const cards = UNITS.map((u,i)=>{
-    const A=V[u.a], B=V[u.b], n=unitDoneCount(u);
-    return `<button class="card link ${n===5?'done':''}" data-unit="${u.id}">
+    const A=V[u.a], B=V[u.b], n=unitDoneCount(u), open=unitUnlocked(i);
+
+    if(!open){
+      const prev = UNITS[i-1], left = ACTS.length - unitDoneCount(prev);
+      return `<div class="card locked" aria-disabled="true">
+        <div class="tags">
+          <span class="tag">Unit ${i+1}</span>
+          <span class="tag lock">${lockIcon()} locked</span>
+        </div>
+        <p class="pair-ipa">${A.ipa}<span class="vs">vs</span>${B.ipa}</p>
+        <h3>${esc(u.title)}</h3>
+        <p class="muted" style="font-size:.92rem;margin:0">
+          Clear Unit ${i} first — ${left} activit${left===1?'y':'ies'} still to pass at ${pc}%.</p>
+      </div>`;
+    }
+
+    return `<button class="card link ${n===ACTS.length?'done':''}" data-unit="${u.id}">
       <div class="tags">
         <span class="tag">Unit ${i+1}</span>
         <span class="tag ${A.tense?'tense':'lax'}">${A.tense?'tense':'lax'}</span>
         <span class="tag ${B.tense?'tense':'lax'}">${B.tense?'tense':'lax'}</span>
-        ${n?`<span class="tag ok">${n}/5 done</span>`:''}
+        ${n===ACTS.length?'<span class="tag ok">cleared</span>'
+          :n?`<span class="tag ok">${n}/${ACTS.length} done</span>`
+             :'<span class="tag" style="color:var(--amber);border-color:rgba(255,201,74,.45)">open</span>'}
       </div>
       <p class="pair-ipa"><span style="color:var(--tense)">${A.ipa}</span><span class="vs">vs</span><span style="color:var(--lax)">${B.ipa}</span></p>
       <h3>${esc(u.title)}</h3>
@@ -438,7 +497,8 @@ function viewHome(){
     </button>`;
   }).join('');
 
-  const cleared = UNITS.filter(u=>unitDoneCount(u)===5).length;
+  const cleared = clearedCount();
+  const need = CONFIG.examAfter - cleared;
   setView(`
     <p class="kicker">The Vowel System · Chapter 4</p>
     <h1>Fourteen vowels, <em>one map</em>.</h1>
@@ -446,22 +506,23 @@ function viewHome(){
 
     <div class="row">
       <button class="btn" data-go="lab">Open the Sound Lab</button>
-      <button class="btn sec" data-go="exam" ${cleared<5?'disabled':''}>
-        ${cleared<5?`Final exam — clear ${5-cleared} more unit${5-cleared>1?'s':''}`:'Take the final exam'}
+      <button class="btn sec" data-go="exam" ${examUnlocked()?'':'disabled'}>
+        ${examUnlocked()?'Take the final exam':`Final exam — ${need} unit${need>1?'s':''} to go`}
       </button>
     </div>
 
     <section class="sec">
       <div class="sec-head"><h2>How to work through this</h2></div>
-      <div class="grid g3">
+      <div class="grid g2">
         <div class="card"><h3>1 · Study</h3><p class="muted" style="margin:0;font-size:.93rem">Open the Sound Lab. Each vowel has a card showing where the tongue sits on the quadrant, what the jaw and lips do, and how it is spelled.</p></div>
-        <div class="card"><h3>2 · Drill</h3><p class="muted" style="margin:0;font-size:.93rem">Each unit has five activities of ten questions. You need ${Math.round(CONFIG.passMark*100)}% to clear one. Questions reshuffle every attempt.</p></div>
-        <div class="card"><h3>3 · Record</h3><p class="muted" style="margin:0;font-size:.93rem">The Speaking Studio plays a model, then records you saying it so you can compare. Clips can be sent to your teacher.</p></div>
+        <div class="card"><h3>2 · Drill</h3><p class="muted" style="margin:0;font-size:.93rem">Five activities of ten questions per unit. You need ${pc}% — ${Math.round(CONFIG.passMark*10)} out of 10 — to clear one. Questions reshuffle every attempt.</p></div>
+        <div class="card"><h3>3 · Unlock</h3><p class="muted" style="margin:0;font-size:.93rem">${CONFIG.lockUnits?`Units open one at a time. Clear all five activities in a unit at ${pc}% and the next unit unlocks.`:'All ten units are open from the start.'}</p></div>
+        <div class="card"><h3>4 · Record</h3><p class="muted" style="margin:0;font-size:.93rem">The Speaking Studio plays a model, then records you saying it so you can compare. Clips can be sent to your teacher.</p></div>
       </div>
     </section>
 
     <section class="sec">
-      <div class="sec-head"><h2>The ten contrasts</h2><p class="muted" style="margin:0;font-size:.88rem">${cleared} of 10 cleared</p></div>
+      <div class="sec-head"><h2>The ten contrasts</h2><p class="muted" style="margin:0;font-size:.88rem">${cleared} of ${UNITS.length} cleared${Store.ok?'':' · progress is not being saved in this browser'}</p></div>
       <div class="grid g2">${cards}</div>
     </section>
   `);
@@ -523,7 +584,9 @@ const ACTS = [
 ];
 
 function viewUnit(id){
-  const u = UNITS.find(x=>x.id===id); if(!u) return viewHome();
+  const idx = unitIndex(id);
+  const u = UNITS[idx]; if(!u) return viewHome();
+  if(!unitUnlocked(idx)){ toast(`Unit ${idx+1} is locked — clear Unit ${idx} first.`); return viewHome(); }
   const A=V[u.a], B=V[u.b];
   const tiles = ACTS.map(a=>{
     const k=u.id+':'+a.id, sc=State.scores[k];
@@ -550,7 +613,7 @@ function viewUnit(id){
     </div>
 
     <section class="sec">
-      <div class="sec-head"><h2>Practice</h2><p class="muted" style="margin:0;font-size:.88rem">${unitDoneCount(u)} of 5 cleared · ${Math.round(CONFIG.passMark*100)}% to pass</p></div>
+      <div class="sec-head"><h2>Practice</h2><p class="muted" style="margin:0;font-size:.88rem">${unitDoneCount(u)} of ${ACTS.length} cleared · ${Math.round(CONFIG.passMark*100)}% to pass each one</p></div>
       <div class="grid g2">${tiles}
         <button class="card link" data-studio="${u.id}">
           <div class="tags"><span class="tag" style="color:var(--amber);border-color:rgba(255,201,74,.45)">Speaking Studio</span></div>
@@ -559,7 +622,11 @@ function viewUnit(id){
       </div>
     </section>
 
-    <div class="row" style="margin-top:30px"><button class="btn sec" data-go="home">All units</button></div>
+    ${CONFIG.lockUnits && UNITS[idx+1] ? `<p class="muted" style="margin-top:18px;font-size:.9rem">
+      ${unitCleared(u) ? `Unit ${idx+2} is open.`
+        : `Clear all ${ACTS.length} activities here at ${Math.round(CONFIG.passMark*100)}% to unlock Unit ${idx+2}.`}</p>` : ''}
+
+    <div class="row" style="margin-top:22px"><button class="btn sec" data-go="home">All units</button></div>
   `);
 }
 
@@ -693,25 +760,51 @@ function runQuiz({title, sub, questions, onDone, backTo}){
 }
 
 function viewActivity(unitId, actId){
-  const u = UNITS.find(x=>x.id===unitId), a = ACTS.find(x=>x.id===actId);
+  const idx = unitIndex(unitId);
+  if(!unitUnlocked(idx)){ toast(`Unit ${idx+1} is locked.`); return viewHome(); }
+  const u = UNITS[idx], a = ACTS.find(x=>x.id===actId);
   const qs = buildQuestions(u, actId, 10);
   runQuiz({
     title:a.name, sub:`${u.title} · ${a.hint}`, questions:qs, backTo:'unit:'+unitId,
     onDone:(right,total)=>{
       const pct = right/total, pass = pct>=CONFIG.passMark;
       const key = unitId+':'+actId;
+      const wasCleared = unitCleared(u);
       State.scores[key]=right;
       if(pass) State.done[key]=true;
+      saveProgress();
+
+      const idx = unitIndex(unitId);
+      const nowCleared = unitCleared(u);
+      const justCleared = nowCleared && !wasCleared;
+      const nextU = UNITS[idx+1];
+      const left = ACTS.length - unitDoneCount(u);
+      const need = Math.round(CONFIG.passMark*10);
+
+      let note;
+      if(!pass){
+        note = `You need ${Math.round(CONFIG.passMark*100)}% — ${need} out of ${total} — to clear an activity. Go back to the Sound Lab, look at where the two vowels sit on the quadrant, then try again. The questions reshuffle every time.`;
+      } else if(justCleared && nextU && CONFIG.lockUnits){
+        note = `That clears Unit ${idx+1}. <strong>Unit ${idx+2} — ${esc(nextU.title)} — is now unlocked.</strong>`;
+      } else if(justCleared && !nextU){
+        note = 'That clears the last unit. The final exam is open.';
+      } else if(left){
+        note = `You are hearing this contrast reliably. ${left} more activit${left===1?'y':'ies'} to clear this unit.`;
+      } else {
+        note = 'You are hearing this contrast reliably.';
+      }
+
       setView(`
         <p class="kicker">${esc(u.title)} · ${esc(a.name)}</p>
         <p class="score ${pass?'pass':'fail'}">${right}<span class="muted" style="font-size:2rem">/${total}</span></p>
-        <h1 style="font-size:clamp(1.4rem,4vw,2rem)">${pass?'Cleared.':'Not yet — try it again.'}</h1>
-        <p class="lede">${pass
-          ? 'You are hearing this contrast reliably. Move on to the next activity, or record yourself in the Speaking Studio.'
-          : `You need ${Math.round(CONFIG.passMark*100)}% to clear an activity. Go back to the Sound Lab, look at where the two vowels sit on the quadrant, then try again — the questions reshuffle every time.`}</p>
+        <h1 style="font-size:clamp(1.4rem,4vw,2rem)">${pass?(justCleared?'Unit cleared.':'Cleared.'):'Not yet — try it again.'}</h1>
+        <p class="lede">${note}</p>
         <div class="row">
-          <button class="btn" data-act="${unitId}|${actId}">Try again</button>
-          <button class="btn sec" data-go="unit:${unitId}">Back to the unit</button>
+          ${pass?'':`<button class="btn" data-act="${unitId}|${actId}">Try again</button>`}
+          ${justCleared && nextU ? `<button class="btn" data-go="unit:${nextU.id}">Start Unit ${idx+2}</button>`
+            : (pass?`<button class="btn" data-go="unit:${unitId}">Back to the unit</button>`
+                   :`<button class="btn sec" data-go="unit:${unitId}">Back to the unit</button>`)}
+          ${justCleared && !nextU ? '<button class="btn" data-go="exam">Take the final exam</button>' : ''}
           ${CONFIG.endpoint?`<button class="btn sec" id="send">Send this score to my teacher</button>`:''}
         </div>
       `);
@@ -725,7 +818,9 @@ function viewActivity(unitId, actId){
    9. SPEAKING STUDIO
    ========================================================================== */
 function viewStudio(unitId){
-  const u = UNITS.find(x=>x.id===unitId);
+  const idx = unitIndex(unitId);
+  if(!unitUnlocked(idx)){ toast(`Unit ${idx+1} is locked.`); return viewHome(); }
+  const u = UNITS[idx];
   const tasks = [...u.pairs.slice(0,5).map(p=>({t:`${p[0]} — ${p[1]}`, kind:'pair'})),
                  ...u.sents.slice(0,2).map(s=>({t:s[0], kind:'sentence'}))];
 
@@ -766,6 +861,10 @@ function viewStudio(unitId){
    10. EXAM
    ========================================================================== */
 function viewExam(){
+  if(!examUnlocked()){
+    toast(`Clear ${CONFIG.examAfter - clearedCount()} more unit(s) before the exam.`);
+    return viewHome();
+  }
   const qs = shuffle(UNITS.flatMap(u=>{
     const act = pick(['mp','sd','odd','ctx','sp'],2);
     return act.flatMap(a=>buildQuestions(u,a,2));
@@ -880,6 +979,18 @@ document.addEventListener('click', async e=>{
 
 document.addEventListener('DOMContentLoaded', ()=>{
   Audio_.init();
+  const rs=document.getElementById('reset');
+  if(rs){
+    const note=document.getElementById('store-note');
+    if(note) note.textContent = Store.ok
+      ? 'Your progress is saved in this browser.'
+      : 'This browser is blocking storage, so progress is lost on reload.';
+    rs.onclick=()=>{
+      if(!confirm('Clear all progress and lock every unit except the first?')) return;
+      State.done={}; State.scores={}; Store.wipe();
+      toast('Progress cleared.'); viewHome();
+    };
+  }
   const st=document.getElementById('settings-toggle'), sp=document.getElementById('settings');
   st.onclick=()=>{ const open=sp.hidden; sp.hidden=!open; st.setAttribute('aria-expanded',String(open)); };
   viewHome();
