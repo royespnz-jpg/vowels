@@ -106,6 +106,13 @@ p.lede{font-size:1.06rem;color:var(--ink-2);max-width:62ch;margin:0 0 26px}
 .card.link{cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit;display:block}
 .card.link:hover{border-color:var(--tense);transform:translateY(-3px);box-shadow:0 16px 40px -22px rgba(228,87,46,.6)}
 .card.done{border-color:rgba(33,176,160,.5)}
+.card.locked{
+  opacity:.42; cursor:not-allowed; border-style:dashed;
+  background:linear-gradient(160deg,#171310,#1B1512);
+}
+.card.locked .pair-ipa{color:var(--ink-3)}
+.card.locked h3{color:var(--ink-2)}
+.tag.lock{color:var(--ink-3);border-color:var(--line-2);gap:5px}
 .tag{
   display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);
   font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
